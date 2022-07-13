@@ -1,0 +1,36 @@
+=NAVA= (not another virtual assistant)
+* self-organizing mind dump with ability to search
+* or, note taking app that permits searching notes
+* notes are organized by different organizing constructs not necessarily input by the user apriori
+* therefore there is an element of "self discovery" where =NAVA= collects meaning from the note
+* ideally the primary interface is just a blank screen where you input the note and =NAVA= does the cataloging automagically
+
+
+# higher-level ideas
+** /fast/ access with /slow/ storage tradeoff - it will be more important to quickly search for a note than for it to properly stored in the data structure (at least in part because there could be an interm store and then the permanent store where a machine learning model is run on a batch later)
+** the /data structure reorganizes around types of notes with more common metadata/ so that more common types of notes are grouped together
+** /metadata is generated/ about a note that is used to organize it
+** /initially there are broad categories/ that notes fall into
+** /direct vs indirect control of organization/ - users can insert a note into a category or even suggest a related note (if a category is not clear to them) for "direct control"; by default users have "indirect control" of how the notes organize in the sense they control what they write and the intent in their note
+** /the interface adjusts with more data/ to help the user (e.g., provides broad categories to insert a note into, lists past notes, lists related notes as you type)
+
+
+# questions
+** what is the data structure for the notes?
+** what metadata is extracted for each note?
+** how does the data structure allow for the data to be organized differently?
+** what role does machine learning play?
+
+
+# modules
+** (1) metadata extraction - information about the semantic content of the note is pulled
+*** one option is do it in stages
+**** /intent/ is first captured, e.g., to some broad categories like "scheduling", "personal", "school", "work"
+**** /entities/ are next captured, e.g., each intent has some general categories that are prepared like for "scheduling" it would be date, place, people
+** (2) data storage - the note with its metadata is stored in some data structure
+*** the design of the data structure needs to be such that it allows fast access - this can be at the tradeoff of slow storage
+** (3) note search - you can search for notes that match your query
+*** one option is do the same backwards - so get the metadata from the search and find the same
+** (4) self organization 
+
+- [ ]  

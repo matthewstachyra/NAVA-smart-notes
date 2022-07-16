@@ -1,58 +1,14 @@
-There are a few key parts to NAVA. Organizing initial thoughts around 4 for now.
-(1) information extraction (what data do we get from the notes)
-(2) data structure (how is this data stored and how is storage updated with new data)
-(3) data search (when a user queries with some keywords in their personal note search engine, how is the data structure searched)
-(4) machine learning (how is ML used to add to the data structure and how is it used to on the data search)
+what would it take to build a beta app for testing from here?
 
-Initial thoughts on each each below.
-
-
-(1) information extraction
---------------------------
-a possible information extraction pipeline could include the below steps:
-- (a) vector embedding: most basic will be embedding the notes in some note feature space and then a similarity measure like cosine similarity can be used
-- (b) intent extraction: use existing open source tools like RASA to identify intents for the user. This requires identifying typical use cases (e.g., scheduling meetings, workout notes, date ideas, name and email of a business associate, grocery list, todo list)
-- (c) metadata extraction: this will all the other data alongside any identified intent. so this includes stuff like part of speech, # of words, tokenizer metrics (count, frequency, TFIDF, etc), presence of data or other numerals, presence of keywords used in other notes, others
-
-reflections:
-- if I input a simple list of vegetables (and don't say what kind of list it is in the note) and then I search 'grocery list' or even more basically 'vegetable list', this list should show up. what data needs to get extract to make that happen?
-- how do you handle a note that has multiple different intents and concepts (e.g., contains a todo list, a colleague's email, a book recommendation)?
-
-
-(2) data strucure
------------------
-algorithm and data structure idea based on reflections for (1) above:
-- imagine a note that has multiple different intents and concepts present, i.e., you have a confused person
-- a simple embedding of the whole note won't do anything useful for search
-- but what about multiple embeddings for one note
-- ok but how do you decide where to segment the text to embed it the segments
-- one approach is to do something like randomized k-fold in the sense you randomly partition the text and see what partial-embeddings provide better results
-- another not mutually exclusive idea is to try some clustering 
-- if that doesn't work, assume another method exists and you identified unrelated segments of text - these are your new tokens
-- get a partial embedding of each segment of text 
-- create a map for each partial embedding to relevant data including: (a) a pointer to the full note in a database, (b) the subset of keywords, (c) other metadata that are true for the embedding. the idea would be that the there is a pointer from partial embedding (which is tight on its content) to the data that is relevant to it)
-- put this map in a graph where the node contains the map (partial embedding : relevant data) and each node has edges to partial embeddings it is similar to (simarility measure will need to consider not just embedding similarity but the metadata that won't be represented in the embedding). this part of course requires more thinking
-- one way to make the graph is for it to have edges to those nodes (which contain the embedding to keywords list maps) with embeddings most similar to it
-- in summary, rather than a full text embedding, identify discrete unrelated chunks and use partial embeddings, then put those in a map with other data (any intent and all metadata), and then this is the key data for the graph
-
-
-(3-4) data search and machine learning
---------------------------------------
-key consideration will be fast access with slow storage tradeoff - it will be more important to quickly search for a note than for it to stored in the data structure in the best possible way
-
-so how to search this partial embedding graph:
-- interim store with batch updates. we could take the concept of 'web crawlers' from search engines so that a user's graph of partial embeddings is periodically 'crawled' to see if new pointers should be established across the graph for related partial embeddings or if existing edges should have their weight updated
-- dummy embedding. what if we created a dummy embedding based on the user query and use that to find in the graph the partial embeddings most related
-
-
-other
------
-other ideas:
-- incorporate visualization component. besides the data structure and embedding algorithm, what could make this unique is providing users with a visualization of the graph and different reorientations of the graph
-- offer direct control. most of this works by indirect means to understand what a user's note means - both what they intend and what they didn't intend (i.e., how the note relates to others in less obvious ways). direct control can come in the form of suggested categories to slot a note into as part of the UI. these categories can include both basic ones (todo list, idea, workout notes, contact information, schedule/plan) and user generated ones based on what is the most commonly generated category
-
-other questions for later (or because I don't want to think about it right now):
-- in the beginning there was darkness. when there is no data yet for a user, how do notes get organized? are there defaults?
-- short might not be sweet. what do you do with a note that has <10 words?
-- hard code it. is it helpful to have questions / checks for different metadata that are picked up on, .e.g., if there is a number, checking if it contains a date; if there is a location, checking if the verbs indicate anything about travel? this is related to the idea of having basic predefined categories
-
+* basic CLI app
+** prompt asks whether you want to input a note or search for a note
+** if you search a note, then it will display the top 5 notes related and ask if you'd like to open the note, if not, then it will take you back to the prompt
+** if you input a note, then it just takes you back to the prompt
+* web app 
+** home - options to
+*** migrate
+*** input
+*** search
+** migrate - provide link to input path (POST)
+** input - form to input note (POST)
+** search - form to get notes (GET)

@@ -1,7 +1,0 @@
-METADATA EXTRACTION MODULE
-* what metadata is available (what are our features)
-** part of speech each word
-** # of words
-** tokenizer metrics (count of words, frequency of word, TFIDF, etc.) 
-** presence of any dates or othern numerals
-** presence of keywords that are key to the user

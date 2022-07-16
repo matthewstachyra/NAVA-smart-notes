@@ -1,3 +1,0 @@
-DATA STORAGE MODULE
-* would it be useful to store which words commonly appear appear together for a user
-* does it make sense to store both keywords and semantic intent

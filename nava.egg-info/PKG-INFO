@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: nava
+Version: 0.1.0
+Summary: a smart notetaking app
+Home-page: https://github.com/matthewstachyra/NAVA-smart-notetaking
+Author: matthew stachyra, michael joseph
+Author-email: matthew.stachyra@tufts.edu
+Requires-Python: >=3
+License-File: LICENSE

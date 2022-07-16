@@ -30,6 +30,9 @@ sentence-transformers = "*"
 spacy = "*"
 protobuf = "==3.19"
 gensim = "*"
+django = "*"
+pyfiglet = "*"
+semver = "*"
 
 [dev-packages]
 

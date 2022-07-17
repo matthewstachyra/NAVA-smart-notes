@@ -12,6 +12,8 @@
 
 smart notes, organized for you by NAVA
 v0.1.0
+```
+
 
 
 

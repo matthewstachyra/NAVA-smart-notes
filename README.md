@@ -1,5 +1,4 @@
-`
-===========================================
+```===========================================
 =  =======  =====  =====  ====  =====  ====
 =   ======  ====    ====  ====  ====    ===
 =    =====  ===  ==  ===  ====  ===  ==  ==
@@ -12,11 +11,11 @@
 ===========================================
 
 smart notes, organized for you by NAVA
-v0.1.0`
+v0.1.0
 
 
 
-# NAVA (Not Another Virtual Assistant)
+## NAVA (Not Another Virtual Assistant)
 
 ## Getting started.
 1. Run `pipenv shell` to create a virtual environment. 

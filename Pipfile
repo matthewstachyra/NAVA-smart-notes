@@ -33,6 +33,7 @@ gensim = "*"
 django = "*"
 pyfiglet = "*"
 semver = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 

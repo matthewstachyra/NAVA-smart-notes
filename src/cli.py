@@ -1,17 +1,18 @@
 '''
 Module that contains the command line app.
 
-Created: 15 July 2022
-Author: Matthew Stachyra
+created: 15 July 2022
+last updated: 26 July 2022
+author: Matthew Stachyra
+
+TODO
+[ ] debug creating tables
+[ ] add -it or --interactive flag to enable command loop
 '''
-import sys
 import argparse
+from pyfiglet import Figlet
 
-from .logo import Logo
-
-
-l = Logo()
-l.__str__()
+from database.db import NAVAdb
 
 message = "Help: Pass as argument a note of type string."
 
@@ -40,12 +41,21 @@ parser.add_argument('-s',
 
 
 def main(args=None):
-    arguments = parser.parse_args(args=args)
-    note_to_add = arguments.add
-    search_terms = arguments.search
+    f = Figlet(font='rev')
+    print(f.renderText('NAVA') + '\n' +  'smart notes, searched for you by NAVA' + '\n' + 'v0.1.0' +'\n')
 
-    # Below is currently just for testing purposes.
-    print("The note you entered is:")
-    print("-"*30)
-    print(note_to_add[0])
+    arguments = parser.parse_args(args=args)
+    note = arguments.add
+    search = arguments.search
+
+    db = NAVAdb()
+    db.create_tables()
+    db.update_with_note(note)
+
+    if arguments.add:
+        print(f"Note to be added {note[0]}")
+
+    if arguments.search:
+        print(f"Searching {search[0]}")
+
 

@@ -6,13 +6,14 @@ last updated: 26 July 2022
 author: Matthew Stachyra
 
 TODO
-[ ] debug creating tables
+[x] debug creating tables
 [ ] add -it or --interactive flag to enable command loop
 '''
 import argparse
 from pyfiglet import Figlet
 
-from database.db import NAVAdb
+from .database.db import NAVAdb
+from .utls
 
 message = "Help: Pass as argument a note of type string."
 
@@ -53,7 +54,7 @@ def main(args=None):
     db.update_with_note(note)
 
     if arguments.add:
-        print(f"Note to be added {note[0]}")
+        print(f"Adding... '{note[0]}'")
 
     if arguments.search:
         print(f"Searching {search[0]}")

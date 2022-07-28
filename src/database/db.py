@@ -7,11 +7,13 @@ set up
 
 postgres commands
 - '\l' shows all databases
-- 'CREATE DATABASE name' creates a database
-- 'DROP DATABASE name' deletes database
+- 'CREATE DATABASE {db name}' creates a database
+- 'DROP DATABASE {db name}' deletes database
+- '\c {db name}' opens the database in terminal
+- '\dt' shows the tables in the database
 
-created: 20 July 202q
-last updated: 26 July 2022
+created: 20 July 2022
+last updated: 28 July 2022
 author: matthew stachyra
 more: https://www.postgresqltutorial.com/postgresql-python/
 
@@ -19,11 +21,13 @@ TODO
 [x] write skeleton db class
 [x] update db class to delete database
 [x] update db class to update database with note
-[ ] debug db
-[ ] update db class to delete a note
-[ ] figure out how get python code to create database if it doesn't exist
+[x] debug db
+[x] figure out how to inspect database
+[ ] tag v0.2.0 once database is working
+[ ] enable embedding of database
+[ ] enable searching
+[ ] tag v0.3.0 once search works
 '''
-
 
 import psycopg2
 
@@ -37,13 +41,19 @@ class NAVAdb:
         self.cur = self.conn.cursor()
 
     def create_tables(self):
-        self.cur.execute(tables)
+        try:
+            self.cur.execute(tables())
+            self.conn.commit()
+        except Exception as e:
+            print(e)
 
     def update_with_note(self, note):
-        self.cur.execute(f"INSERT INTO notes VALUES ('{notes[0]}')")
+        self.cur.execute(f"INSERT INTO notes VALUES (DEFAULT, '{note[0]}')")
+        self.conn.commit()
 
     def delete(self):
         self.cur.execute(f"DROP DATABASE {type(self).__name__}")
+        self.conn.commit()
 
     #TODO
     # def delete_note(self, note):

@@ -2,18 +2,19 @@
 Module that contains the command line app.
 
 created: 15 July 2022
-last updated: 26 July 2022
+last updated: 28 July 2022
 author: Matthew Stachyra
 
 TODO
 [x] debug creating tables
+[ ] enable automatic detection of tags
 [ ] add -it or --interactive flag to enable command loop
 '''
 import argparse
 from pyfiglet import Figlet
 
 from .database.db import NAVAdb
-from .utls
+from .utils import Embedding, Search
 
 message = "Help: Pass as argument a note of type string."
 
@@ -43,7 +44,7 @@ parser.add_argument('-s',
 
 def main(args=None):
     f = Figlet(font='rev')
-    print(f.renderText('NAVA') + '\n' +  'smart notes, searched for you by NAVA' + '\n' + 'v0.1.0' +'\n')
+    print(f.renderText('NAVA') + '\n' +  'smart notes, searched for you by NAVA' + '\n' + 'v0.2.0' +'\n')
 
     arguments = parser.parse_args(args=args)
     note = arguments.add

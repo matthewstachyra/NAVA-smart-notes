@@ -11,7 +11,6 @@ TODO
 '''
 
 from sentence_transformers import SentenceTransformer, util
-from .db import NAVAdb
 
 
 class Search:

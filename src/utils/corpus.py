@@ -2,11 +2,12 @@
 Captures corpus from filesystem.
 
 created: 6 Aug 2022
-last updated: n/a
+last updated: 10 Aug 2022
 author: matthew stachyra
 
 TODO 
-[ ] readin() - test existing code
+[ ] scanforfiles() - test recursion
+[ ] readin() - test file contents is read
 [ ] save() - start an decide on save format (e.g., csv, parquet)
 '''
 
@@ -28,7 +29,29 @@ class Corpus:
         # self.notes = ... # unknown what the best format is
         self.home = Path.home()
         self.dirs = ['Documents', 'Desktop'] # update this to scan other directories
-        self.formats = set('txt', 'text', 'md', 'org', 'rtf', 'doc', 'pages')
+        self.formats = {'txt', 'text', 'md', 'org', 'rtf', 'doc', 'pages'}
+        self.filenames = []
+
+    def scanforfiles(self, prevpath, currpath):
+        # preorder traversal
+        # this continues scanning directories until it finds files  
+        formatcheck = lambda x : x.name[x.name.rfind('.'):].lower() in self.formats 
+        filecheck = lambda x : '.' in x # simple assumptions (1) its either a directory or a file;
+                                        # (2) only posibly relevant files will have '.' in the name
+        it = os.scandir(currpath)
+        for i in it:
+            # if its a file, append
+            if filecheck(i) and formatcheck(i):
+                print(f"scanforfiles -- appending {i}")
+                self.filenames.append(i.name)
+            
+            # otherwise recurse on the directory
+            nextpath = os.path.join(currpath, i)
+            prevpath = currpath
+            print(f"scanforfiles -- recursing on {nextpath}")
+            self.scanforfiles(prevpath, nextpath)
+            it.close()
+
 
     def readin(self):
         # this may need to be updated to detect the operating system
@@ -36,22 +59,16 @@ class Corpus:
         # it may be useful to have a config file where the user can
         # specify the entrypoint folder as well as what kinds of files
         # to read in
-        fnames = list()
         paths = [os.path.join(self.home, 'Documents'), 
                 os.path.join(self.home, 'Desktop')]
+        
+        # add file names via preorder traversal of directories
+        for p in paths:
+            self.scanforfiles(self.home, p)
 
-        # save files that have a permitted format
-        fn = lambda x : x.lower() in self.formats 
-        for path in paths:
-            it = os.scandir(path)
-            for f in it:
-                if fn(f.name[f.name.rfind('.'):])]:
-                    fnames.extend(f.name)
-            it.close()
-
-        # store files
-        for file in files:
-            with open(file, 'r') as f:
+        # store file contents for embedding
+        for f in self.filenames:
+            with open(f, 'r') as f:
                 contents = f.read()
 
 

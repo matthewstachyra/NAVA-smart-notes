@@ -11,7 +11,7 @@ TODO
 
 from sentence_transformers import SentenceTransformer, util
 
-from . import Corpus
+from .corpus import Corpus
 
 
 class Embed:

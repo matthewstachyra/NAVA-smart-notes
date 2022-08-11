@@ -2,12 +2,13 @@
 Captures corpus from filesystem.
 
 created: 6 Aug 2022
-last updated: 10 Aug 2022
+last updated: 11 Aug 2022
 author: matthew stachyra
 
 TODO 
-[ ] scanforfiles() - test recursion
-[ ] readin() - test file contents is read
+[x] scanforfiles() - test recursion
+[x] readin() - test file contents is read
+[ ] debug some directories getting added as files
 [ ] save() - start an decide on save format (e.g., csv, parquet)
 '''
 
@@ -34,24 +35,30 @@ class Corpus:
 
     def scanforfiles(self, prevpath, currpath):
         # preorder traversal
-        # this continues scanning directories until it finds files  
-        formatcheck = lambda x : x.name[x.name.rfind('.'):].lower() in self.formats 
-        filecheck = lambda x : '.' in x # simple assumptions (1) its either a directory or a file;
-                                        # (2) only posibly relevant files will have '.' in the name
-        it = os.scandir(currpath)
-        for i in it:
-            # if its a file, append
-            if filecheck(i) and formatcheck(i):
-                print(f"scanforfiles -- appending {i}")
-                self.filenames.append(i.name)
-            
-            # otherwise recurse on the directory
-            nextpath = os.path.join(currpath, i)
-            prevpath = currpath
-            print(f"scanforfiles -- recursing on {nextpath}")
-            self.scanforfiles(prevpath, nextpath)
-            it.close()
+        # continues scanning directories until files(leaves) reached
 
+        # assumptions: (1) its either a directory or a file;
+        # (2) only possibly relevant files will have '.' in the name
+        filecheck = lambda x : '.' in x
+        formatcheck = lambda x : x[x.rfind('.')+1:].lower() in self.formats 
+        try:
+            it = os.scandir(currpath)
+            for i in it:
+                # if its a file, append
+                if formatcheck(i.name) and filecheck(i.name):
+                    self.filenames.extend([os.path.join(currpath, i.name)])
+                
+                # otherwise recurse on the directory
+                nextpath = os.path.join(currpath, i)
+                prevpath = currpath
+                self.scanforfiles(prevpath, nextpath)
+            it.close()
+        except Exception:
+            # base case
+            # it must be a file, append
+            if formatcheck(currpath):
+                self.filenames.extend([currpath])
+        self.filenames= list(set(self.filenames))
 
     def readin(self):
         # this may need to be updated to detect the operating system
@@ -67,11 +74,14 @@ class Corpus:
             self.scanforfiles(self.home, p)
 
         # store file contents for embedding
+        i = 0
         for f in self.filenames:
-            with open(f, 'r') as f:
-                contents = f.read()
+            with open(f, 'r') as file:
+                contents = file.read()
+                print(f"{i}      {f}")
+                print(contents)
+                print("\n")
+                i += 1
 
-
-    def save(self):
+    # def save(self):
         # TODO 
-        pass
